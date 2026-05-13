@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: snapsl-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: snapsl-server
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+      - REDIS_URL=redis://redis:6379
+      - BASE_URL=http://localhost:4000
+      - CLIENT_URL=http://localhost:3000
+      - LINK_TTL_DAYS=100
+      - RATE_LIMIT_MAX=30
+    depends_on:
+      - redis
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: snapsl-client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:4000
+    depends_on:
+      - server
+
+volumes:
+  redis_data:
