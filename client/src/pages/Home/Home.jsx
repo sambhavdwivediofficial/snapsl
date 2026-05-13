@@ -173,7 +173,7 @@ export default function Home() {
     <>
       <Head>
         <title>SnapSL — Ultra-fast URL Shortener</title>
-        <link rel="icon" href="/icons.png" />
+        <link rel="icon" href="/favicon.ico" />
         <meta name="description" content="Shorten any URL instantly. Generate QR codes. No sign-up required. Links expire in 100 days." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
